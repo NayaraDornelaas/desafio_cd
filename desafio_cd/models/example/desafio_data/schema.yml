@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: desafio_cd
+    description: 'Base de dados utilizada para o desafio de ciência de dados para a DIT'
+    database: desafio_cd 
+    schema: public 
+    tables:
+      - name: dados_ficha_a_desafio
+    
+
+  
