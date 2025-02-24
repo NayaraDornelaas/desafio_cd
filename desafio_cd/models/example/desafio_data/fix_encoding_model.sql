@@ -1,6 +1,6 @@
 WITH source_data AS (
     SELECT 
-        {%  set columns = [
+        {{ fix_encoding([
             'bairro',
             'religiao',
             'escolaridade',
@@ -14,12 +14,8 @@ WITH source_data AS (
             'em_caso_doenca_procura',
             'situacao_profissional',
             'tipo'
-        ] %}
-
-        {{ fix_encoding(columns) }}
-        
+        ]) }}
     FROM {{ source('desafio_cd', 'dados_ficha_a_desafio') }}
 )
 
 SELECT * FROM source_data
-
