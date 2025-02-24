@@ -1,27 +1,34 @@
 {% macro fix_encoding(columns) %}
     {% for column in columns %}
         CASE
-            -- caso seja JSON array e não estiver vazio, converte para string
-            WHEN jsonb_typeof({{ column }}::jsonb) = 'array' AND jsonb_array_length({{ column }}::jsonb) > 0 THEN 
+            -- passar de aspas simples para aspas duplas e converte para uma string
+            WHEN {{ column }} ~ '^\[.*\]$' AND {{ column }} LIKE '%''%' THEN 
                 array_to_string(ARRAY(
-                    SELECT jsonb_array_elements_text({{ column }}::jsonb)
+                    SELECT jsonb_array_elements_text(
+                        replace({{ column }}, '''', '"')::jsonb
+                    )
                 ), ', ')
 
-            -- caso seja JSON array mas esteja vazio
-            WHEN jsonb_typeof({{ column }}::jsonb) = 'array' AND jsonb_array_length({{ column }}::jsonb) = 0 THEN NULL
+            -- converter json array para string
+            WHEN {{ column }} ~ '^\[.*\]$' AND ({{ column }} ~ '^\s*\[.*\]\s*$' AND {{ column }} !~ '[^\[\],{}"\s]') THEN 
+                array_to_string(ARRAY(
+                    SELECT jsonb_array_elements_text(replace({{ column }}, '''', '"')::jsonb)
+                ), ', ')
 
-            -- caso seja uma string com formato de JSON array remove colchetes e aspas
-            WHEN {{ column }} ~ '^\[.*\]$' THEN 
-                regexp_replace({{ column }}, '^\["?(.*?)"?\]$', '\1', 'g')
-
-            -- caso seja uma string "[]"
+            -- caso esteja vazio
             WHEN {{ column }} = '[]' THEN NULL
 
-            -- caso seja texto corrompido, substitui '[]' por NULL e corrige encoding
-            ELSE NULLIF(convert_from({{ column }}::bytea, 'UTF8'), '[]')
+            -- remove colchetes e aspas erradas
+            WHEN {{ column }} ~ '^\[.*\]$' THEN 
+                regexp_replace({{ column }}, '\[|\]|''', '', 'g')
+
+            -- caso seja bytea, converte para UTF-8
+            WHEN pg_typeof({{ column }})::TEXT = 'bytea' 
+                THEN convert_from({{ column }}::bytea, 'UTF8')
+
+            -- caso nao seja json, retorna o valor original 
+            ELSE {{ column }}
         END AS {{ column }}
         {% if not loop.last %}, {% endif %}
     {% endfor %}
 {% endmacro %}
-
-
