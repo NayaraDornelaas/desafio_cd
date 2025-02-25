@@ -17,3 +17,12 @@ Este repositório contém um projeto dbt configurado para um banco de dados Post
 - Clonar o repositório;
 - Criar e configurar o banco de dados no PoatgreSQL (recomenda-se utilizar o código .sql disponibilizado aqui nestre repositório
 - Instale e confiure o dbt para se conectar ao PostgreSQL
+
+
+
+
+
+\*\ *obs: o projeto ainda necessita de ajustes e de finaliação do tratamento de algumas inconsistências 
+
+
+
