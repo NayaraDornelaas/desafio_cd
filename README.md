@@ -22,7 +22,7 @@ Este repositório contém um projeto dbt configurado para um banco de dados Post
 
 
 
-\*\ *obs: o projeto ainda necessita de ajustes e de finaliação do tratamento de algumas inconsistências 
+\* *obs: o projeto ainda necessita de ajustes e de finaliação do tratamento de algumas inconsistências* 
 
 
 
