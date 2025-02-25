@@ -1,4 +1,4 @@
-# Obetivo 
+# Objetivo 
 *Retirado do documento enviado para os participantes*
 
 -Analisar, estruturar e transformar dados em formato raw fornecidos no arquivo .csv
