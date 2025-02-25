@@ -14,15 +14,15 @@ WITH ids_duplicados AS (
 
 SELECT 
     CASE 
-        WHEN rn = 1 THEN id_paciente::uuid  -- Mantém o ID original e converte para UUID
+        WHEN rn = 1 THEN id_paciente::uuid  
         ELSE 
-            -- Gerando um identificador único a partir de um hash MD5 e convertendo para UUID
+            -- Gerar um identificador único a partir de um hash MD5 e converter para UUID
             md5(
                 COALESCE(data_nascimento::TEXT, '') || 
                 COALESCE(sexo, '') || 
                 COALESCE(raca_cor, '') || 
                 COALESCE(data_cadastro::TEXT, '')
-            )::uuid  -- Converte o hash MD5 para UUID
+            )::uuid 
     END AS novo_id_paciente,
     *
 FROM ids_duplicados
